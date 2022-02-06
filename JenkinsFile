@@ -55,4 +55,4 @@ pipeline
 java -jar .jar &''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'product', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
         }
     }
-}
+
