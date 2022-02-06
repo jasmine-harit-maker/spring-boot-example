@@ -5,8 +5,8 @@ pipeline
     }
     tools
     {
-        maven 'maven'
-        jdk 'jdk 11'
+        maven 'maven 3.8.4'
+        java 'java 11.0.13'
     }
     options
     {
