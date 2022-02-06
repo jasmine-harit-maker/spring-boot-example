@@ -1,11 +1,10 @@
 pipeline
 {
-    agent {
-        label 'slave'
-    }
+    agent  any 
     tools
     {
         maven 'Maven 3.8.4'
+       // jdk 'jdk 11'
     }
     options
     {
@@ -18,7 +17,7 @@ pipeline
         {
             steps
             {
-                sh 'mvn clean'
+                sh 'mvn clean test '
             }
         }
         
@@ -26,14 +25,14 @@ pipeline
         {
             steps
             {
-                sh 'mvn test'
+                sh 'mvn clean test'
             }
         }
         stage("Package")
         {
             steps
             {
-                sh 'mvn package'
+                sh 'mvn  clean package'
             }
         }
     }
