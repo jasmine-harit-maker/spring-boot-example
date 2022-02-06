@@ -37,10 +37,17 @@ pipeline
     }
     post
     {
-       always{
-            mail to: 'jasmine.harit@knoldus.com',
-			subject: "Pipeline: ${currentBuild.fullDisplayName} is ${currentBuild.currentResult}",
-			body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+      def notifyDevelopers() {
+    if( currentBuild.result == currentBuild.previousBuild.result ) {
+        return
+    }
+
+    emailext (
+        subject: currentBuild.result + ': ' + env.BRANCH_NAME + ' - BuildNr: ' + env.BUILD_NUMBER,
+        body: 'Hier gehts zum Build: ' + env.BUILD_URL,
+        recipientProviders: [[$class: 'jasmine.harit@knoldus.com']]
+    )
+}
         }
          success{
             sh 'echo "--------------------------Deploying------------------------------"'
