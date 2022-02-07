@@ -38,8 +38,8 @@ pipeline
 	stage("Deploy")
             {
                 steps{
-                    sshagent(['Jasmine']) {
-                    sh "scp -o StrictHostKeyChecking=no  /var/lib/jenkins/workspace/Eval-Jenkins_Production/target/*.jar ubuntu@18.212.174.147:/home/ubuntu/"
+                    sshagent(['abc123']) {
+                    sh "scp -o StrictHostKeyChecking=no  /var/lib/jenkins/workspace/DevBranch_Production/target/*.jar ubuntu@13.56.224.114:/home/ubuntu/"
                                
                  }
                 }
