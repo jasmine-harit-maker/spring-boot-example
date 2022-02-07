@@ -1,58 +1,30 @@
-pipeline
-{
-    agent  any 
-    tools
-    {
-        maven 'Maven 3.8.4'
-    }
-    options
-    {
-        timestamps()
-        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
-    }
-    stages
-    {
-        stage("Cleanup")
-        {
-            steps
-            {
-                sh 'mvn clean test '
-            }
+pipeline {
+    agent any 
+        tools {
+            maven 'Maven 3.8.4'
+            //jdk 'jdk 11'
         }
-        
-        stage("Test")
-        {
-            steps
-            {
-                sh 'mvn clean test'
+    stages {
+                stage("building"){
+            steps{
+                sh "mvn compile"
+		 
             }
-        }
-        stage("Package")
-        {
-            steps
-            {
-                sh 'mvn  clean package'
-            }
-        }
-    }
-    post
-    {
-      def notifyDevelopers() {
-    if( currentBuild.result == currentBuild.previousBuild.result ) {
-        return
-    }
+                }
 
-    emailext (
-        subject: currentBuild.result + ': ' + env.BRANCH_NAME + ' - BuildNr: ' + env.BUILD_NUMBER,
-        body: 'Hier gehts zum Build: ' + env.BUILD_URL,
-        recipientProviders: [[$class: 'jasmine.harit@knoldus.com']]
-    )
+        stage('Testing') {
+            steps {
+                echo 'Testing the application'
+                sh "mvn clean test"
+            }
+        }
+    }
+    post {
+        success{
+        echo "Testing stage successful"
+        }
+        failure{
+        echo "Testing stage failed"
+        }
+    }
 }
-        }
-         success{
-            sh 'echo "--------------------------Deploying------------------------------"'
-            sshPublisher(publishers: [sshPublisherDesc(configName: 'production', transfers: [sshTransfer(cleanRemote: true, excludes: '', execCommand: '''cd product/target
-java -jar .jar &''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'product', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
-        }
-    }
-
